@@ -30,6 +30,8 @@
 # inherit from the proprietary version
 -include vendor/htc/shootervm/BoardConfigVendor.mk
 
+TARGET_SPECIFIC_HEADER_PATH := device/htc/shootervm/include
+
 TARGET_BOOTLOADER_BOARD_NAME := shooter
 
 TARGET_OTA_ASSERT_DEVICE := shooter
@@ -48,6 +50,13 @@ BOARD_HAVE_SQN_WIMAX := true
 
 # Kernel Details
 TARGET_KERNEL_CONFIG := shooter_defconfig
+TARGET_KERNEL_SOURCE := kernel/htc/msm8660
+BUILD_KERNEL := true
+
+# Linaro
+TARGET_KERNEL_CUSTOM_TOOLCHAIN := cmb-linaro-4.7.3
+#TARGET_KERNEL_CUSTOM_TOOLCHAIN := linaro-gcc-4.8
+#TARGET_KERNEL_CUSTOM_TOOLCHAIN_SUFFIX := arm-eabi
 
 # Camera
 TARGET_DISABLE_ARM_PIE := true
@@ -60,7 +69,7 @@ BOARD_HTC_3D_SUPPORT := true
 # Custom LUN File Path
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/class/android_usb/android0/f_mass_storage/lun0/file
 
-BOARD_KERNEL_CMDLINE := console=ttyHSL0 androidboot.hardware=shooter no_console_suspend=1
+BOARD_KERNEL_CMDLINE := console=ttyHSL0 androidboot.hardware=shooter no_console_suspend=1 maxkhz=1512000 maxscroff=486000 3dgpu=320000000 2dgpu=266667000 s2w=0 s2w_start=MENU s2w_end=SEARCH
 BOARD_KERNEL_BASE := 0x48000000
 BOARD_KERNEL_PAGE_SIZE := 2048
 

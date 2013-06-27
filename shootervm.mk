@@ -111,6 +111,9 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     gps.shooter
 
+PRODUCT_COPY_FILES += \
+    device/common/gps/gps.conf_US_SUPL:system/etc/gps.conf
+
 PRODUCT_PACKAGES += \
     Torch \
     CellBroadcastReceiver
@@ -129,11 +132,39 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.telephony.cdma.xml:system/etc/permissions/android.hardware.telephony.cdma.xml
 
+## CMB Stuff and Seeder etc
+PRODUCT_COPY_FILES += \
+    device/htc/shootervm/prebuilt/bin/seeder:system/bin/seeder \
+    device/htc/shootervm/prebuilt/etc/init.d/98seeding:system/etc/init.d/98seeding \
+    device/htc/shootervm/prebuilt/xbin/rngd:system/xbin/rngd \
+    device/htc/shootervm/prebuilt/xbin/entro:system/xbin/entro \
+    device/htc/shootervm/prebuilt/app/SwiqiSettingsService.apk:system/app/SwiqiSettingsService.apk \
+    device/htc/shootervm/prebuilt/etc/be_movie:system/etc/be_movie \
+    device/htc/shootervm/prebuilt/etc/be_movie_setting:system/etc/be_movie_setting \
+    device/htc/shootervm/prebuilt/etc/be2_album:system/etc/be2_album \
+    device/htc/shootervm/prebuilt/etc/permissions/com.sonyericsson.uxp.xml:system/etc/permissions/com.sonyericsson.uxp.xml \
+    device/htc/shootervm/prebuilt/etc/permissions/com.sonyericsson.uxpres.xml:system/etc/permissions/com.sonyericsson.uxpres.xml \
+    device/htc/shootervm/prebuilt/framework/com.sonyericsson.uxpres.jar:system/framework/com.sonyericsson.uxpres.jar \
+    device/htc/shootervm/prebuilt/framework/com.sonyericsson.uxp.jar:system/framework/com.sonyericsson.uxp.jar \
+    device/htc/shootervm/prebuilt/lib/libswiqisettinghelper.so:system/lib/libswiqisettinghelper.so \
+    device/htc/shootervm/prebuilt/lib/libmbe_paramselector.so:system/lib/libmbe_paramselector.so \
+    device/htc/shootervm/prebuilt/lib/libmbe.so:system/lib/libmbe.so \
+
+# Kernel Modules
+ifneq ($(BUILD_KERNEL),true)
+    PRODUCT_COPY_FILES += $(shell \
+        find device/htc/shootervm/prebuilt/kernel -name '*.ko' \
+        | sed -r 's/^\/?(.*\/)([^/ ]+)$$/\1\2:system\/lib\/modules\/\2/' \
+        | tr '\n' ' ')
+endif
+
 ## CDMA Sprint stuffs
 PRODUCT_PROPERTY_OVERRIDES += \
 	ro.com.google.clientidbase=android-htc \
 	ro.com.google.locationfeatures=1 \
-        ro.goo.version=$(shell date +%Y%m%d%H%M%S)
+       ro.service.swiqi2.supported=true \
+	persist.service.swiqi2.enable=1 \
+       ro.goo.version=$(shell date +%Y%m%d%H%M%S)
 
 # We have enough storage space to hold precise GC data
 PRODUCT_TAGS += dalvik.gc.type-precise
